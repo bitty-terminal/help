@@ -1,0 +1,47 @@
+# Bitty plugin manifest.
+#
+# File name, keys, and limits are the accepted v1 contract in bitty-docs
+# `docs/specifications/plugin-platform-rfc.md` (OQ-012). The plugin manager and
+# the host parse this file independently before any plugin code runs.
+#
+# `just manifest` validates this file with the authoritative
+# `bitty-plugin-lint` from bitty-plugin-sdk, pinned by commit in `package.json`
+# and `bun.lock`; `just docs` runs the SDK README contract checker.
+
+[plugin]
+id = "bitty-terminal.help"
+name = "Help"
+version = "0.0.1"
+description = "Help and which-key shortcut overlay over the live keymap registry."
+license = "MIT"
+
+[compat]
+# Minimum-only host compatibility (bitty#2462): `bitty.keymaps.list`
+# (bitty#2405), `bitty.ui.present.show`/`hide` (bitty#2406), and live
+# plugin-suggested bindings (bitty#2407) ship in the 0.0.31 release train. No
+# upper bound is declared so newer hosts install without a manifest edit.
+bitty = ">=0.0.31"
+plugin-api = "^1.0"
+
+[capabilities]
+# Deny by default; four least-privilege grants (bitty#2408, bitty-plugins#122).
+#
+# - `runtime.keymaps.read`: bounded read-only pages from `bitty.keymaps.list`.
+# - `ui.rich`: build declarative `List` and `Text` scene primitives.
+# - `ui.overlay`: mount the help scene in the accepted `overlay` slot.
+# - `ui.present`: show and hide the mounted `overlay` block on the non-modal
+#   `Popup` presentation overlay session without taking keyboard capture.
+#
+# No `ui.overlay.focus`, `terminal.*`, `clipboard.*`, `fs.*`, `process.*`,
+# `network.*`, `env.*`, `platform.*`, or `debug.*` grant is requested or needed.
+runtime.keymaps.read = true
+ui.rich = true
+ui.overlay = true
+ui.present = true
+
+[lazy]
+# Static trigger: the host registers `toggle_help` without creating a VM.
+commands = ["bitty-terminal.help:toggle_help"]
+# `overlay.dismissed` notifies the owner when Core dismisses the presentation
+# overlay on `Esc` or view close without consuming the key press.
+events = ["overlay.dismissed"]

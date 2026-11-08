@@ -1,0 +1,14 @@
+# help: workspace identity descriptor (kind/lang/role mirror workspace.toml).
+[repo]
+name = "help"
+kind = "plugin"
+lang = "lua/ts"
+role = "independent plugin: help and which-key shortcut overlay"
+owner = "bitty-plugins"
+docs = "bitty-plugins-docs"
+
+[contracts.consumes]
+manifest-v1 = "OQ-012 plugin-platform-rfc" # bitty-plugin.toml header
+plugin-api-v1 = "ADR-0009 Lua Surface" # lua/help/init.lua cites Plugin API v1
+keymaps-read-v1 = "bitty#2405 runtime.keymaps.read" # lua/help/init.lua
+present-overlay-v1 = "bitty#2406 ui.present" # lua/help/init.lua
